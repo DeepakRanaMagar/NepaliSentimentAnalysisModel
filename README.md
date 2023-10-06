@@ -1,66 +1,56 @@
-# Nepali Sentiment Analysis
+---
+license: apache-2.0
+language:
+- ne
+library_name: transformers
+pipeline_tag: text-classification
+---
 
-With an increase in internet access in Nepal and ease of typing in Nepali, Nepali language has become prevalent on social media platforms. However, there is a lack of fine-grained sentiment analysis for comments written in Nepali. In this project, we aim to analyze the YouTube comments written in Nepali, both code-mixed and code-switched. As a first step, we are creating a Named Targeted Aspect Based Sentiment Analysis Dataset from comments extracted from popular Nepali YouTube videos under the News & Politics category. This dataset can be used for empirical studies on multilingual training, domain adaptation and vector-space word mapping techniques. Hence, this dataset can play a major role in identifying abusive comments in Nepali texts.
+# Sentiment Analysis with BERT: Nepali Sentiment Dataset
 
-## Data Collection
-Nepali Sentiment Analysis (NepSA) is a named targeted aspect-based sentiment analysis dataset. We collected the comments from the most popular Nepali YouTube channels having the highest subscribers under the News & Politics category. The dataset consists of 3068 comments extracted from  37 different YouTube videos of 9 different YouTube channels. We used binary sentiment polarity schema and divided the comments into 6 aspect categories General, Profanity, Violence, Feedback, Sarcasm and Out-of-scope to annotate the data. All the targeted annotations are created considering the target entity towards which the sentiment is expressed and not on the general understanding of the sentence. The target entities are divided mainly into Person, Organization, Location and Miscellaneous.
+This repository contains code for training and evaluating a sentiment analysis model using the BERT (Bidirectional Encoder Representations from Transformers) model on the Nepali Sentiment Dataset. The model achieves an accuracy of 99.75% on the test dataset.
 
-## Tasks
-We divided the experiments into two subtasks: Aspect Term Extraction and Sentiment Polarity Identification. 
+## Dataset
 
-Aspect Term Extraction resembles the sequence labelling task where we tag each token of a given sentence with predefined aspect category or named entities. We experiment with four major categories General, Profanity, Violence, Feedback under Aspect Category and Person, Organization, Location and Miscellaneous under Target Entities. 
+The dataset used for training and testing the sentiment analysis model is a balanced dataset in CSV format. The dataset is loaded using the `pandas` library. The training dataset consists of 2084 balanced data, and the test dataset consists of 2001 balanced data. Label 0 = Negative, Label 1 = Positive, Label 2 = Neutral 
+![Alt text](/Users/deepakrana/Desktop/NepaliSentimentAnalysis/dataset.png)
 
-Sentiment Polarity Identification is a binary classification task to identify sentiment polarity [0, 1] of each aspect categories in every given sentence.
+## Model
 
-## How to run
+The BERT model is used for sequence classification and is loaded from the `bert-base-multilingual-uncased` pre-trained model. The model is initialized with `num_labels=3` since we have three sentiment classes: positive, negative, and neutral.
 
-### Task 1: Aspect Term Extraction
+## Preprocessing
 
-Please refer modified version of torchnlp [here](https://github.com/oya163/torchnlp)
-    
+The dataset is preprocessed using the `NepaliSentimentDataset` class. The class takes the texts, labels, tokenizer, and maximum sequence length as inputs. The texts are preprocessed using regular expressions to remove special characters, usernames, and extra whitespace. The `tokenizer` from the Hugging Face `transformers` library is used to tokenize the texts and convert them into input IDs and attention masks. The preprocessed data is returned as a dictionary with the input IDs, attention masks, and labels.
 
-### Task 2: Sentiment Polarity Identification
+## Training
 
-    time bash run_classification.sh    
+The model is trained using the `train_model` function. The function takes the model, train dataloader, and test dataloader as inputs. The model is trained for 10 epochs with an early stopping mechanism. The AdamW optimizer is used with a learning rate of 2e-5 and epsilon value of 1e-8. The function also includes additional connection layers before the classification layer of the BERT model. After each epoch, the model is evaluated on the test dataset.
 
+## Training Progress and Evaluation Metrics
+This section provides insights into the training progress of the sentiment analysis model and includes graphs showing the loss values and accuracy values throughout the training process.
+
+# Loss Value Graph
+The graph below displays the training progress by showing the variation in the loss values across different epochs. It helps visualize the convergence of the model during training.
+
+![Alt text](/Users/deepakrana/Desktop/NepaliSentimentAnalysis/loss_value.png)
+Loss Value Graph
+
+# Accuracy Value Graph
+The following graph illustrates the accuracy values achieved by the model during the training process. It presents a clear picture of how the model's performance improves over time.
+
+![Alt text](/Users/deepakrana/Desktop/NepaliSentimentAnalysis/training_accuracy.png)
+Accuracy Value Graph
+
+These graphs provide a visual representation of the training progress and performance of the sentiment analysis model, allowing for better understanding and analysis of the results.
 
 ## Results
-### Task 1: Aspect Term Extraction
-| Model      | P      | R      | F1     |
-|------------|--------|--------|--------|
-| BiLSTM+CRF | 0.6070 | 0.5395 | 0.5707 |
-| BERT       | 0.5814 | 0.5788 | 0.5798 |
 
+After training, the trained model achieves an accuracy of 99.75% on the test dataset.
 
-### Task 2: Sentiment Polarity Identification
-| Model  | Acc   | P     | R     | F1    |
-|--------|-------|-------|-------|-------|
-| BERT   | 0.800 | 0.804 | 0.800 | 0.799 |
-| BiLSTM | 0.815 | 0.816 | 0.816 | 0.816 |
-| CNN    | 0.811 | 0.812 | 0.811 | 0.811 |
-| SVM    | 0.714 | 0.716 | 0.714 | 0.712 |
+## Saving the Model
+The trained model and tokenizer are saved using the `save_pretrained` function from the Hugging Face `transformers` library. The model and tokenizer are saved in the directory 
 
+---
 
-
-## References
-- [Internet Stat](https://www.Internetworldstats.com/stats3.htm#asia)
-- [They Don't Leave Us Alone Anywhere We Go](https://research.google/pubs/pub47721/)
-- SemEval [2014](http://alt.qcri.org/semeval2014/task4/index.php?id=data-and-tools), [2015](http://alt.qcri.org/semeval2015/task12/) and [2016](http://alt.qcri.org/semeval2016/task5/) Aspect Based Sentiment Analysis
-- [Annotating Targets of Opinions in Arabic using Crowdsourcing](https://www.aclweb.org/anthology/W15-3210.pdf)
-
-
-
-## Publication
-- Published in [IEEE ASONAM 2020](https://ieeexplore.ieee.org/document/9381292)
-
-## Citation
-    @INPROCEEDINGS{9381292,
-      author={Singh, Oyesh Mann and Timilsina, Sandesh and Bal, Bal Krishna and Joshi, Anupam},
-      booktitle={2020 IEEE/ACM International Conference on Advances in Social Networks Analysis and Mining (ASONAM)}, 
-      title={Aspect Based Abusive Sentiment Detection in Nepali Social Media Texts}, 
-      year={2020},
-      volume={},
-      number={},
-      pages={301-308},
-      doi={10.1109/ASONAM49781.2020.9381292}
-    }
+**Note:** The code provided is a simplified version for demonstration purposes. Additional error handling, logging, and hyperparameter tuning can be added for production use.
