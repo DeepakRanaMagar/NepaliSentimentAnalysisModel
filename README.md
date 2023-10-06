@@ -10,10 +10,13 @@ pipeline_tag: text-classification
 
 This repository contains code for training and evaluating a sentiment analysis model using the BERT (Bidirectional Encoder Representations from Transformers) model on the Nepali Sentiment Dataset. The model achieves an accuracy of 99.75% on the test dataset.
 
+This Model is Hosted on huggingface, You can access this model with the link below:
+https://huggingface.co/dpkrm/NepaliSentimentAnalysis
+
 ## Dataset
 
 The dataset used for training and testing the sentiment analysis model is a balanced dataset in CSV format. The dataset is loaded using the `pandas` library. The training dataset consists of 2084 balanced data, and the test dataset consists of 2001 balanced data. Label 0 = Negative, Label 1 = Positive, Label 2 = Neutral 
-![Alt text](/Users/deepakrana/Desktop/NepaliSentimentAnalysis/dataset.png)
+
 
 ## Model
 
@@ -33,13 +36,11 @@ This section provides insights into the training progress of the sentiment analy
 # Loss Value Graph
 The graph below displays the training progress by showing the variation in the loss values across different epochs. It helps visualize the convergence of the model during training.
 
-![Alt text](/Users/deepakrana/Desktop/NepaliSentimentAnalysis/loss_value.png)
 Loss Value Graph
 
 # Accuracy Value Graph
 The following graph illustrates the accuracy values achieved by the model during the training process. It presents a clear picture of how the model's performance improves over time.
 
-![Alt text](/Users/deepakrana/Desktop/NepaliSentimentAnalysis/training_accuracy.png)
 Accuracy Value Graph
 
 These graphs provide a visual representation of the training progress and performance of the sentiment analysis model, allowing for better understanding and analysis of the results.
